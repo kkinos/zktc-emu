@@ -47,7 +47,7 @@ pub enum Error {
     #[error("unknown instruction 0x{0:04x}")]
     UnknownInstruction(u16),
 
-    #[error("debug interrupt ")]
+    #[error("debug interrupt")]
     DebugInterrupt(),
 }
 
@@ -814,7 +814,7 @@ mod test {
         run_test("mem/wthr_test.mem");
     }
 
-    // cannnot test for C2 instructions
+    // cannot test for C2 instructions
 
     fn run_test(path: &str) {
         let mut zktc = test_setup(path);
