@@ -179,6 +179,14 @@ impl Cpu {
         self.set_gr(rd, self.thr);
     }
 
+    pub fn rppc(&mut self, rd: u8) {
+        self.set_gr(rd, self.ppc);
+    }
+
+    pub fn rppsr(&mut self, rd: u8) {
+        self.set_gr(rd, self.ppsr);
+    }
+
     pub fn wsp(&mut self, rd: u8) {
         self.sp = self.get_gr(rd);
     }
@@ -195,6 +203,14 @@ impl Cpu {
         self.thr = self.get_gr(rd);
     }
 
+    pub fn wppc(&mut self, rd: u8) {
+        self.ppc = self.get_gr(rd);
+    }
+
+    pub fn wppsr(&mut self, rd: u8) {
+        self.ppsr = self.get_gr(rd);
+    }
+
     pub fn rfi(&mut self) {
         self.pc = self.ppc;
         self.psr = self.ppsr;
@@ -208,5 +224,12 @@ impl Cpu {
     pub fn wtr(&mut self) {
         let tr = ((self.thr as u32) << 16) | self.tlr as u32;
         self.tr = tr;
+    }
+
+    pub fn trap(&mut self) {
+        self.ppc = self.pc;
+        self.ppsr = self.psr;
+        self.psr = 0x2;
+        self.pc = 0;
     }
 }

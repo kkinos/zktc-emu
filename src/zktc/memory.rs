@@ -68,21 +68,21 @@ impl Memory {
     }
 
     fn read_from_rom(&self, address: &u16) -> u16 {
-        (self.rom[(address + 1) as usize] as u16) << 8 | self.rom[*address as usize] as u16
+        ((self.rom[(address + 1) as usize] as u16) << 8) | (self.rom[*address as usize] as u16)
     }
 
     fn read_from_ram(&self, address: &u16) -> u16 {
-        (self.ram[(address + 1) as usize] as u16) << 8 | self.ram[*address as usize] as u16
+        ((self.ram[(address + 1) as usize] as u16) << 8) | (self.ram[*address as usize] as u16)
     }
 
     pub fn write_to_rom(&mut self, address: &u16, data: u16) {
         self.rom[*(address) as usize] = (data & 0x00FF) as u8;
-        self.rom[(address + 1) as usize] = (data & 0xFF00) as u8;
+        self.rom[(address + 1) as usize] = ((data & 0xFF00) >> 8) as u8;
     }
 
     pub fn write_to_ram(&mut self, address: &u16, data: u16) {
         self.ram[*(address) as usize] = (data & 0x00FF) as u8;
-        self.ram[(address + 1) as usize] = (data & 0xFF00) as u8;
+        self.ram[(address + 1) as usize] = ((data & 0xFF00) >> 8) as u8;
     }
 }
 

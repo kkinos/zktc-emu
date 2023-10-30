@@ -37,6 +37,9 @@ pub enum InstInfo {
     C2 {
         mnemonic: String,
     },
+    Trap {
+        mnemonic: String,
+    },
 }
 
 #[derive(thiserror::Error, Debug, PartialEq)]
@@ -125,7 +128,6 @@ impl Zktc {
         if word == 0x0 {
             return Err(Error::DebugInterrupt());
         }
-
         self.cpu.pc += 2;
 
         let opcode = word & 0x001F;
@@ -412,9 +414,8 @@ impl Zktc {
                     Self::print_inst_info(current_pc, word, inst_info);
 
                     let data = self.cpu.get_gr(rd);
-                    let sp = self.cpu.sp;
-                    self.memory.write_to_memory(&sp, data)?;
                     self.cpu.sp -= 2;
+                    self.memory.write_to_memory(&self.cpu.sp, data)?;
                 }
                 0b00010 => {
                     let inst_info = InstInfo::C1 {
@@ -423,9 +424,9 @@ impl Zktc {
                     };
                     Self::print_inst_info(current_pc, word, inst_info);
 
-                    self.cpu.sp += 2;
                     let data = self.memory.read_from_memory(&self.cpu.sp)?;
                     self.cpu.set_gr(rd, data);
+                    self.cpu.sp += 2;
                 }
                 0b00011 => {
                     let inst_info = InstInfo::C1 {
@@ -474,6 +475,24 @@ impl Zktc {
                 }
                 0b01000 => {
                     let inst_info = InstInfo::C1 {
+                        mnemonic: "rppc".to_string(),
+                        rd,
+                    };
+                    Self::print_inst_info(current_pc, word, inst_info);
+
+                    self.cpu.rppc(rd);
+                }
+                0b01001 => {
+                    let inst_info = InstInfo::C1 {
+                        mnemonic: "rppsr".to_string(),
+                        rd,
+                    };
+                    Self::print_inst_info(current_pc, word, inst_info);
+
+                    self.cpu.rppsr(rd);
+                }
+                0b01010 => {
+                    let inst_info = InstInfo::C1 {
                         mnemonic: "wsp".to_string(),
                         rd,
                     };
@@ -481,7 +500,7 @@ impl Zktc {
 
                     self.cpu.wsp(rd);
                 }
-                0b01001 => {
+                0b01011 => {
                     let inst_info = InstInfo::C1 {
                         mnemonic: "wpsr".to_string(),
                         rd,
@@ -490,7 +509,7 @@ impl Zktc {
 
                     self.cpu.wpsr(rd);
                 }
-                0b01010 => {
+                0b01100 => {
                     let inst_info = InstInfo::C1 {
                         mnemonic: "wtlr".to_string(),
                         rd,
@@ -499,7 +518,7 @@ impl Zktc {
 
                     self.cpu.wtlr(rd);
                 }
-                0b01011 => {
+                0b01101 => {
                     let inst_info = InstInfo::C1 {
                         mnemonic: "wthr".to_string(),
                         rd,
@@ -507,6 +526,24 @@ impl Zktc {
                     Self::print_inst_info(current_pc, word, inst_info);
 
                     self.cpu.wthr(rd);
+                }
+                0b01110 => {
+                    let inst_info = InstInfo::C1 {
+                        mnemonic: "wppc".to_string(),
+                        rd,
+                    };
+                    Self::print_inst_info(current_pc, word, inst_info);
+
+                    self.cpu.wppc(rd);
+                }
+                0b01111 => {
+                    let inst_info = InstInfo::C1 {
+                        mnemonic: "wppsr".to_string(),
+                        rd,
+                    };
+                    Self::print_inst_info(current_pc, word, inst_info);
+
+                    self.cpu.wppsr(rd);
                 }
                 _ => Err(Error::UnknownInstruction(word))?,
             },
@@ -535,7 +572,18 @@ impl Zktc {
 
                     self.cpu.wtr();
                 }
-                _ => Err(Error::UnknownInstruction(word))?,
+                _ => {
+                    if word == 0xFFFF {
+                        let inst_info = InstInfo::Trap {
+                            mnemonic: "trap".to_string(),
+                        };
+                        Self::print_inst_info(current_pc, word, inst_info);
+
+                        self.cpu.trap();
+                    } else {
+                        Err(Error::UnknownInstruction(word))?
+                    }
+                }
             },
             _ => Err(Error::UnknownInstruction(word))?,
         };
@@ -634,6 +682,9 @@ impl Zktc {
                 )
             }
             InstInfo::C2 { mnemonic } => {
+                println!("pc:0x{:04x} {:016b} {} ", current_pc, word, mnemonic)
+            }
+            InstInfo::Trap { mnemonic } => {
                 println!("pc:0x{:04x} {:016b} {} ", current_pc, word, mnemonic)
             }
         }
@@ -790,8 +841,13 @@ mod test {
     }
 
     #[test]
-    fn rthr_test() {
-        run_test("mem/rthr_test.mem");
+    fn rppc_test() {
+        run_test("mem/rppc_test.mem");
+    }
+
+    #[test]
+    fn rppsr_test() {
+        run_test("mem/rppsr_test.mem");
     }
 
     #[test]
@@ -812,6 +868,15 @@ mod test {
     #[test]
     fn wthr_test() {
         run_test("mem/wthr_test.mem");
+    }
+
+    #[test]
+    fn wppc_test() {
+        run_test("mem/wppc_test.mem");
+    }
+    #[test]
+    fn wppsr_test() {
+        run_test("mem/wppsr_test.mem");
     }
 
     // cannot test for C2 instructions
