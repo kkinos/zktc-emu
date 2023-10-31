@@ -3,6 +3,7 @@ use clap::Parser;
 mod zktc;
 use rustyline::error::ReadlineError;
 use rustyline::DefaultEditor;
+use zktc::Error;
 use zktc::Zktc;
 
 #[derive(Parser)]
@@ -37,11 +38,9 @@ fn main() -> Result<()> {
                 let trimed = line.trim();
                 let cmd: Vec<&str> = trimed.split(' ').filter(|c| !c.is_empty()).collect();
                 if !cmd.is_empty() {
-                    if cmd[0] == "exit" {
-                        println!("exit");
+                    if let Err(Error::EmulatorExit()) = zktc.do_cmd(cmd) {
                         break;
                     }
-                    zktc.do_cmd(cmd)?;
                 }
             }
             Err(ReadlineError::Eof) => {

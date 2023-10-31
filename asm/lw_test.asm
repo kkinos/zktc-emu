@@ -45,7 +45,7 @@ pass: // if test passed M[0xffff] = 1
 	sw x2, x7,0
 	jalr x0, x6, 0
 
-fail: // if test failed M[0xffff] = 1
+fail: // if test failed M[0xffff] = 2
 	addi x2, x0, 2
 	sw x2, x7,0
 	jalr x0, x6, 0

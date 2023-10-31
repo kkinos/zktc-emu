@@ -47,9 +47,9 @@ impl Memory {
     }
 
     pub fn read_from_memory(&self, address: &u16) -> Result<u16, MemoryError> {
-        let data = if (ROM_LOW_ADDRESS..=ROM_HIGH_ADDRESS).contains(address) {
+        let data = if (ROM_LOW_ADDRESS..=ROM_HIGH_ADDRESS - 1).contains(address) {
             self.read_from_rom(&(address - ROM_LOW_ADDRESS))
-        } else if (RAM_LOW_ADDRESS..=RAM_HIGH_ADDRESS).contains(address) {
+        } else if (RAM_LOW_ADDRESS..=RAM_HIGH_ADDRESS - 1).contains(address) {
             self.read_from_ram(&(address - RAM_LOW_ADDRESS))
         } else {
             Err(MemoryError::InvalidAddress(*address))?
@@ -57,9 +57,9 @@ impl Memory {
         Ok(data)
     }
     pub fn write_to_memory(&mut self, address: &u16, data: u16) -> Result<(), MemoryError> {
-        if (ROM_LOW_ADDRESS..=ROM_HIGH_ADDRESS).contains(address) {
+        if (ROM_LOW_ADDRESS..=ROM_HIGH_ADDRESS - 1).contains(address) {
             self.write_to_rom(&(address - ROM_LOW_ADDRESS), data);
-        } else if (RAM_LOW_ADDRESS..=RAM_HIGH_ADDRESS).contains(address) {
+        } else if (RAM_LOW_ADDRESS..=RAM_HIGH_ADDRESS - 1).contains(address) {
             self.write_to_ram(&(address - RAM_LOW_ADDRESS), data);
         } else {
             Err(MemoryError::InvalidAddress(*address))?

@@ -52,6 +52,9 @@ pub enum Error {
 
     #[error("debug interrupt")]
     DebugInterrupt(),
+
+    #[error("exit")]
+    EmulatorExit(),
 }
 
 impl Zktc {
@@ -75,6 +78,10 @@ impl Zktc {
                     }
                 }
             }
+            "exit" => {
+                println!("exit");
+                return Err(Error::EmulatorExit());
+            }
             "break" | "b" => {
                 if cmd.len() != 2 {
                     eprintln!("invalid command\ne.g. : b 0x8000");
@@ -89,11 +96,71 @@ impl Zktc {
                 match u16::from_str_radix(addr.trim_start_matches("0x"), 16) {
                     Ok(addr) => self.set_break(addr),
                     Err(_) => {
-                        eprint!("invalid address\ne.g. : b 0x8000");
+                        eprintln!("invalid address\ne.g. : b 0x8000");
                     }
                 }
             }
             "regsters" | "regs" => self.print_regs(),
+            "mem" | "m" => {
+                if cmd.len() != 3 {
+                    eprintln!("invalid command\ne.g. : m 0x8000 10");
+                    return Ok(());
+                }
+
+                let addr = cmd[1];
+                let num = cmd[2];
+                if !addr.starts_with("0x") {
+                    eprintln!("address is only hexadecimal\ne.g. : m 0x8000 10");
+                    return Ok(());
+                }
+                match u16::from_str_radix(addr.trim_start_matches("0x"), 16) {
+                    Ok(addr) => {
+                        if addr % 2 == 0 {
+                            match num.parse::<u16>() {
+                                Ok(num) => {
+                                    for i in 0..num {
+                                        match self.memory.read_from_memory(&(addr + i * 2)) {
+                                            Ok(data) => {
+                                                println!(
+                                                    "address : 0x{:04x} {:016b}",
+                                                    addr + i * 2,
+                                                    data
+                                                );
+                                            }
+                                            Err(e) => {
+                                                eprintln!("{}", e);
+                                            }
+                                        }
+                                    }
+                                }
+                                Err(_) => {
+                                    eprintln!("invalid command\ne.g. : m 0x8000 10");
+                                }
+                            }
+                        } else {
+                            eprintln!("address is only even\ne.g. : m 0x8000 10");
+                        }
+                    }
+                    Err(_) => {
+                        eprintln!("invalid address\ne.g. : m 0x8000 10");
+                    }
+                }
+            }
+            "help" => {
+                println!("run, r        : continue to execute until break point");
+                println!();
+                println!("step, s       : step execute");
+                println!();
+                println!("breakpoint, b : set breakpoint (b 0x8000)");
+                println!();
+                println!("mem, m        : display data in memory (m 0x8000 10)");
+                println!();
+                println!("regsters, regs: display data in register");
+                println!();
+                println!("help          : show this message");
+                println!();
+                println!("exit          : exit");
+            }
 
             _ => {
                 eprintln!("command not found : {}", cmd[0]);
@@ -624,7 +691,7 @@ impl Zktc {
         match inst_info {
             InstInfo::R { mnemonic, rd, rs } => {
                 println!(
-                    "pc:0x{:04x} {:016b} {} x{} x{}",
+                    "pc : 0x{:04x} {:016b} {} x{} x{}",
                     current_pc, word, mnemonic, rd, rs
                 )
             }
@@ -637,12 +704,12 @@ impl Zktc {
             } => {
                 if let Some(imm) = imm {
                     println!(
-                        "pc:0x{:04x} {:016b} {} x{} x{} {}",
+                        "pc : 0x{:04x} {:016b} {} x{} x{} {}",
                         current_pc, word, mnemonic, rd, rs, imm
                     )
                 } else {
                     println!(
-                        "pc:0x{:04x} {:016b} {} x{} x{} {}",
+                        "pc : 0x{:04x} {:016b} {} x{} x{} {}",
                         current_pc,
                         word,
                         mnemonic,
@@ -661,12 +728,12 @@ impl Zktc {
             } => {
                 if let Some(imm) = imm {
                     println!(
-                        "pc:0x{:04x} {:016b} {} x{} {}",
+                        "pc : 0x{:04x} {:016b} {} x{} {}",
                         current_pc, word, mnemonic, rd, imm
                     )
                 } else {
                     println!(
-                        "pc:0x{:04x} {:016b} {} x{} {}",
+                        "pc : 0x{:04x} {:016b} {} x{} {}",
                         current_pc,
                         word,
                         mnemonic,
@@ -677,15 +744,15 @@ impl Zktc {
             }
             InstInfo::C1 { mnemonic, rd } => {
                 println!(
-                    "pc:0x{:04x} {:016b} {} x{} ",
+                    "pc : 0x{:04x} {:016b} {} x{} ",
                     current_pc, word, mnemonic, rd
                 )
             }
             InstInfo::C2 { mnemonic } => {
-                println!("pc:0x{:04x} {:016b} {} ", current_pc, word, mnemonic)
+                println!("pc : 0x{:04x} {:016b} {} ", current_pc, word, mnemonic)
             }
             InstInfo::Trap { mnemonic } => {
-                println!("pc:0x{:04x} {:016b} {} ", current_pc, word, mnemonic)
+                println!("pc : 0x{:04x} {:016b} {} ", current_pc, word, mnemonic)
             }
         }
     }
