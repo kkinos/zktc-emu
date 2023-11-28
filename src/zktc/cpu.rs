@@ -141,8 +141,9 @@ impl Cpu {
     }
 
     pub fn jalr(&mut self, rd: u8, rs: u8, imm: i16) {
+        let pc = self.get_gr(rs).wrapping_add(imm as u16);
         self.set_gr(rd, self.pc);
-        self.pc = self.get_gr(rs).wrapping_add(imm as u16);
+        self.pc = pc;
     }
 
     pub fn jal(&mut self, rd: u8, imm: i16) {
