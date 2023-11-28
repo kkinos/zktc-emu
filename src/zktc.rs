@@ -68,14 +68,10 @@ impl Zktc {
 
     pub fn do_cmd(&mut self, cmd: Vec<&str>) -> Result<(), Error> {
         match cmd[0] {
-            "run" | "r" => self.run()?,
+            "run" | "r" => self.run(),
             "step" | "s" => {
                 if let Err(e) = self.step() {
-                    if e == Error::DebugInterrupt() {
-                        println!("{}", e);
-                    } else {
-                        return Err(e);
-                    }
+                    eprintln!("{}", e);
                 }
             }
             "exit" => {
@@ -169,15 +165,11 @@ impl Zktc {
         Ok(())
     }
 
-    pub fn run(&mut self) -> Result<(), Error> {
+    pub fn run(&mut self) {
         loop {
             if let Err(e) = self.step() {
-                if e == Error::DebugInterrupt() {
-                    println!("{}", Error::DebugInterrupt());
-                    break;
-                } else {
-                    return Err(e);
-                }
+                eprintln!("{}", e);
+                break;
             }
             if let Some(b) = self.break_point {
                 if self.cpu.pc == b {
@@ -185,7 +177,6 @@ impl Zktc {
                 }
             }
         }
-        Ok(())
     }
 
     pub fn step(&mut self) -> Result<(), Error> {
@@ -950,7 +941,7 @@ mod test {
 
     fn run_test(path: &str) {
         let mut zktc = test_setup(path);
-        zktc.run().unwrap();
+        zktc.run();
         assert_eq!(zktc.memory.read_from_memory(&0xfffe).unwrap(), 1);
     }
 
