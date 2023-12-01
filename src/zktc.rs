@@ -758,185 +758,185 @@ mod test {
 
     #[test]
     fn mov_test() {
-        run_test("mem/mov_test.mem");
+        run_test("test/mem/mov_test.mem");
     }
 
     #[test]
     fn add_test() {
-        run_test("mem/add_test.mem");
+        run_test("test/mem/add_test.mem");
     }
 
     #[test]
     fn sub_test() {
-        run_test("mem/sub_test.mem");
+        run_test("test/mem/sub_test.mem");
     }
 
     #[test]
     fn and_test() {
-        run_test("mem/sub_test.mem");
+        run_test("test/mem/sub_test.mem");
     }
 
     #[test]
     fn or_test() {
-        run_test("mem/or_test.mem");
+        run_test("test/mem/or_test.mem");
     }
 
     #[test]
     fn xor_test() {
-        run_test("mem/xor_test.mem");
+        run_test("test/mem/xor_test.mem");
     }
 
     #[test]
     fn sll_test() {
-        run_test("mem/sll_test.mem");
+        run_test("test/mem/sll_test.mem");
     }
 
     #[test]
     fn srl_test() {
-        run_test("mem/srl_test.mem");
+        run_test("test/mem/srl_test.mem");
     }
 
     #[test]
     fn sra_test() {
-        run_test("mem/sra_test.mem");
+        run_test("test/mem/sra_test.mem");
     }
 
     #[test]
     fn addi_test() {
-        run_test("mem/addi_test.mem");
+        run_test("test/mem/addi_test.mem");
     }
 
     #[test]
     fn subi_test() {
-        run_test("mem/subi_test.mem");
+        run_test("test/mem/subi_test.mem");
     }
 
     #[test]
     fn beq_test() {
-        run_test("mem/beq_test.mem");
+        run_test("test/mem/beq_test.mem");
     }
 
     #[test]
     fn bnq_test() {
-        run_test("mem/bnq_test.mem");
+        run_test("test/mem/bnq_test.mem");
     }
 
     #[test]
     fn blt_test() {
-        run_test("mem/blt_test.mem");
+        run_test("test/mem/blt_test.mem");
     }
 
     #[test]
     fn bge_test() {
-        run_test("mem/bge_test.mem");
+        run_test("test/mem/bge_test.mem");
     }
 
     #[test]
     fn bltu_test() {
-        run_test("mem/bltu_test.mem");
+        run_test("test/mem/bltu_test.mem");
     }
 
     #[test]
     fn bgeu_test() {
-        run_test("mem/bgeu_test.mem");
+        run_test("test/mem/bgeu_test.mem");
     }
 
     #[test]
     fn jalr_test() {
-        run_test("mem/jalr_test.mem");
+        run_test("test/mem/jalr_test.mem");
     }
 
     #[test]
     fn lw_test() {
-        run_test("mem/lw_test.mem");
+        run_test("test/mem/lw_test.mem");
     }
 
     #[test]
     fn sw_test() {
-        run_test("mem/sw_test.mem");
+        run_test("test/mem/sw_test.mem");
     }
 
     #[test]
     fn jal_test() {
-        run_test("mem/jal_test.mem");
+        run_test("test/mem/jal_test.mem");
     }
 
     #[test]
     fn lil_test() {
-        run_test("mem/lil_test.mem");
+        run_test("test/mem/lil_test.mem");
     }
 
     #[test]
     fn lih_test() {
-        run_test("mem/lih_test.mem");
+        run_test("test/mem/lih_test.mem");
     }
 
     #[test]
     fn push_test() {
-        run_test("mem/push_test.mem");
+        run_test("test/mem/push_test.mem");
     }
 
     #[test]
     fn pop_test() {
-        run_test("mem/pop_test.mem");
+        run_test("test/mem/pop_test.mem");
     }
 
     #[test]
     fn rpc_test() {
-        run_test("mem/rpc_test.mem");
+        run_test("test/mem/rpc_test.mem");
     }
 
     #[test]
     fn rsp_test() {
-        run_test("mem/rsp_test.mem");
+        run_test("test/mem/rsp_test.mem");
     }
 
     #[test]
     fn rpsr_test() {
-        run_test("mem/rpsr_test.mem");
+        run_test("test/mem/rpsr_test.mem");
     }
     #[test]
     fn rtlr_test() {
-        run_test("mem/rtlr_test.mem");
+        run_test("test/mem/rtlr_test.mem");
     }
 
     #[test]
     fn rppc_test() {
-        run_test("mem/rppc_test.mem");
+        run_test("test/mem/rppc_test.mem");
     }
 
     #[test]
     fn rppsr_test() {
-        run_test("mem/rppsr_test.mem");
+        run_test("test/mem/rppsr_test.mem");
     }
 
     #[test]
     fn wsp_test() {
-        run_test("mem/wsp_test.mem");
+        run_test("test/mem/wsp_test.mem");
     }
 
     #[test]
     fn wpsr_test() {
-        run_test("mem/wpsr_test.mem");
+        run_test("test/mem/wpsr_test.mem");
     }
 
     #[test]
     fn wtlr_test() {
-        run_test("mem/wtlr_test.mem");
+        run_test("test/mem/wtlr_test.mem");
     }
 
     #[test]
     fn wthr_test() {
-        run_test("mem/wthr_test.mem");
+        run_test("test/mem/wthr_test.mem");
     }
 
     #[test]
     fn wppc_test() {
-        run_test("mem/wppc_test.mem");
+        run_test("test/mem/wppc_test.mem");
     }
     #[test]
     fn wppsr_test() {
-        run_test("mem/wppsr_test.mem");
+        run_test("test/mem/wppsr_test.mem");
     }
 
     // cannot test for C2 instructions
