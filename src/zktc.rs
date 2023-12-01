@@ -118,9 +118,11 @@ impl Zktc {
                                         match self.memory.read_from_memory(&(addr + i * 2)) {
                                             Ok(data) => {
                                                 println!(
-                                                    "address : 0x{:04x} {:016b}",
-                                                    addr + i * 2,
-                                                    data
+                                                    "address : 0x{:04x} {:08b}\naddress : 0x{:04x} {:08b}",
+                                                    addr + (i * 2),
+                                                    (data & 0x00ff) as u8,
+                                                    addr + (i * 2) + 1,
+                                                    ((data & 0xff00) >> 8) as u8,
                                                 );
                                             }
                                             Err(e) => {
