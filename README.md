@@ -45,3 +45,11 @@ help          : show this message
 exit          : exit
 zktc-emu >>
 ```
+
+# テスト
+
+[zktc-asm](https://github.com/kinpoko/zktc-asm)をビルドしてパスを通した状態で以下のコマンドでテストを行うことができます。
+
+```bash
+make
+```
