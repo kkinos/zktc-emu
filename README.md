@@ -5,8 +5,7 @@ zktc-emu は Rust で実装された ZKTC エミュレータです。
 # インストール
 
 ```bash
-git clone https://github.com/kinpoko/zktc-emu.git
-cargo build --release
+cargo install --git https://github.com/kinpoko/zktc-emu.git
 ```
 
 # 使い方
@@ -48,7 +47,7 @@ zktc-emu >>
 
 # テスト
 
-[zktc-asm](https://github.com/kinpoko/zktc-asm)をビルドしてパスを通した状態で以下のコマンドでテストを行うことができます。
+[zktc-asm](https://github.com/kinpoko/zktc-asm)をインストールした状態で以下のコマンドでテストを行うことができます。
 
 ```bash
 make test
