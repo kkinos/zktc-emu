@@ -46,17 +46,28 @@ impl Memory {
         Ok(memory)
     }
 
-    pub fn read_from_memory(&self, address: &u16) -> Result<u16, MemoryError> {
-        let data = if (ROM_LOW_ADDRESS..=ROM_HIGH_ADDRESS - 1).contains(address) {
+    pub fn read_from_memory(&self, address: &u16, half: bool) -> Result<u16, MemoryError> {
+        let mut data = if (ROM_LOW_ADDRESS..=ROM_HIGH_ADDRESS - 1).contains(address) {
             self.read_from_rom(&(address - ROM_LOW_ADDRESS))
         } else if (RAM_LOW_ADDRESS..=RAM_HIGH_ADDRESS - 1).contains(address) {
             self.read_from_ram(&(address - RAM_LOW_ADDRESS))
         } else {
             Err(MemoryError::InvalidAddress(*address))?
         };
+        if half {
+            data = ((data & 0x00ff) as i8) as u16; // sign extention
+        }
         Ok(data)
     }
-    pub fn write_to_memory(&mut self, address: &u16, data: u16) -> Result<(), MemoryError> {
+    pub fn write_to_memory(
+        &mut self,
+        address: &u16,
+        mut data: u16,
+        half: bool,
+    ) -> Result<(), MemoryError> {
+        if half {
+            data = data & 0x00ff;
+        }
         if (ROM_LOW_ADDRESS..=ROM_HIGH_ADDRESS - 1).contains(address) {
             self.write_to_rom(&(address - ROM_LOW_ADDRESS), data);
         } else if (RAM_LOW_ADDRESS..=RAM_HIGH_ADDRESS - 1).contains(address) {

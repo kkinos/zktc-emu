@@ -115,7 +115,7 @@ impl Zktc {
                             match num.parse::<u16>() {
                                 Ok(num) => {
                                     for i in 0..num {
-                                        match self.memory.read_from_memory(&(addr + i * 2)) {
+                                        match self.memory.read_from_memory(&(addr + i * 2), false) {
                                             Ok(data) => {
                                                 println!(
                                                     "address : 0x{:04x} {:08b}\naddress : 0x{:04x} {:08b}",
@@ -184,7 +184,7 @@ impl Zktc {
     pub fn step(&mut self) -> Result<(), Error> {
         let current_pc = self.cpu.pc;
 
-        let word = self.memory.read_from_memory(&current_pc)?;
+        let word = self.memory.read_from_memory(&current_pc, false)?;
         if word == 0x0 {
             return Err(Error::DebugInterrupt());
         }
@@ -403,6 +403,35 @@ impl Zktc {
             }
             0b01010 => {
                 let inst_info = InstInfo::I5 {
+                    mnemonic: "lh".to_string(),
+                    rd,
+                    rs,
+                    imm: None,
+                    imm_sext: Some(imm_i5_sext),
+                };
+                Self::print_inst_info(current_pc, word, inst_info);
+
+                let address = self.cpu.get_gr(rs).wrapping_add(imm_i5_sext as u16);
+                let data = self.memory.read_from_memory(&address, true)?;
+                self.cpu.set_gr(rd, data);
+            }
+            0b01011 => {
+                let inst_info = InstInfo::I5 {
+                    mnemonic: "lhu".to_string(),
+                    rd,
+                    rs,
+                    imm: None,
+                    imm_sext: Some(imm_i5_sext),
+                };
+                Self::print_inst_info(current_pc, word, inst_info);
+
+                let address = self.cpu.get_gr(rs).wrapping_add(imm_i5_sext as u16);
+                let data = self.memory.read_from_memory(&address, false)?;
+                let data = data & 0x00ff;
+                self.cpu.set_gr(rd, data);
+            }
+            0b01100 => {
+                let inst_info = InstInfo::I5 {
                     mnemonic: "lw".to_string(),
                     rd,
                     rs,
@@ -412,10 +441,24 @@ impl Zktc {
                 Self::print_inst_info(current_pc, word, inst_info);
 
                 let address = self.cpu.get_gr(rs).wrapping_add(imm_i5_sext as u16);
-                let data = self.memory.read_from_memory(&address)?;
+                let data = self.memory.read_from_memory(&address, false)?;
                 self.cpu.set_gr(rd, data);
             }
-            0b01011 => {
+            0b01101 => {
+                let inst_info = InstInfo::I5 {
+                    mnemonic: "sh".to_string(),
+                    rd,
+                    rs,
+                    imm: None,
+                    imm_sext: Some(imm_i5_sext),
+                };
+                Self::print_inst_info(current_pc, word, inst_info);
+
+                let address = self.cpu.get_gr(rs).wrapping_add(imm_i5_sext as u16);
+                let data = self.cpu.get_gr(rd);
+                self.memory.write_to_memory(&address, data, true)?;
+            }
+            0b01110 => {
                 let inst_info = InstInfo::I5 {
                     mnemonic: "sw".to_string(),
                     rd,
@@ -427,9 +470,9 @@ impl Zktc {
 
                 let address = self.cpu.get_gr(rs).wrapping_add(imm_i5_sext as u16);
                 let data = self.cpu.get_gr(rd);
-                self.memory.write_to_memory(&address, data)?;
+                self.memory.write_to_memory(&address, data, false)?;
             }
-            0b01100 => {
+            0b10000 => {
                 let inst_info = InstInfo::I8 {
                     mnemonic: "jal".to_string(),
                     rd,
@@ -441,7 +484,7 @@ impl Zktc {
 
                 self.cpu.jal(rd, imm_i8_sext);
             }
-            0b01101 => {
+            0b10001 => {
                 let inst_info = InstInfo::I8 {
                     mnemonic: "lil".to_string(),
                     rd,
@@ -453,7 +496,7 @@ impl Zktc {
 
                 self.cpu.lil(rd, imm_i8);
             }
-            0b01110 => {
+            0b10010 => {
                 let inst_info = InstInfo::I8 {
                     mnemonic: "lih".to_string(),
                     rd,
@@ -475,7 +518,7 @@ impl Zktc {
 
                     let data = self.cpu.get_gr(rd);
                     self.cpu.sp -= 2;
-                    self.memory.write_to_memory(&self.cpu.sp, data)?;
+                    self.memory.write_to_memory(&self.cpu.sp, data, false)?;
                 }
                 0b00010 => {
                     let inst_info = InstInfo::C1 {
@@ -484,7 +527,7 @@ impl Zktc {
                     };
                     Self::print_inst_info(current_pc, word, inst_info);
 
-                    let data = self.memory.read_from_memory(&self.cpu.sp)?;
+                    let data = self.memory.read_from_memory(&self.cpu.sp, false)?;
                     self.cpu.set_gr(rd, data);
                     self.cpu.sp += 2;
                 }
@@ -847,8 +890,23 @@ mod test {
     }
 
     #[test]
+    fn lh_test() {
+        run_test("test/mem/lh_test.mem");
+    }
+
+    #[test]
+    fn lhu_test() {
+        run_test("test/mem/lhu_test.mem");
+    }
+
+    #[test]
     fn lw_test() {
         run_test("test/mem/lw_test.mem");
+    }
+
+    #[test]
+    fn sh_test() {
+        run_test("test/mem/sh_test.mem");
     }
 
     #[test]
@@ -944,7 +1002,7 @@ mod test {
     fn run_test(path: &str) {
         let mut zktc = test_setup(path);
         zktc.run();
-        assert_eq!(zktc.memory.read_from_memory(&0xfffe).unwrap(), 1);
+        assert_eq!(zktc.memory.read_from_memory(&0xfffe, false).unwrap(), 1);
     }
 
     fn test_setup(path: &str) -> Zktc {
