@@ -19,7 +19,7 @@ lih x2, expect@h
 or x3, x2
 lw x3, x3, 0 // x3 expect
 
-// sw test
+// sh test
 
 lil x1, data@l
 lih x2, data@h
@@ -40,7 +40,7 @@ jalr x0, x4, 0
 jalr x0, x5, 0
 
 expect:
-	.word 0x00ff
+	.word 0xffff
 
 pass: // if test passed M[0xffff] = 1
 	addi x2, x0, 1

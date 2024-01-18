@@ -66,11 +66,17 @@ impl Memory {
         half: bool,
     ) -> Result<(), MemoryError> {
         if half {
-            data = data & 0x00ff;
+            data &= 0x00ff;
         }
         if (ROM_LOW_ADDRESS..=ROM_HIGH_ADDRESS - 1).contains(address) {
+            if half {
+                data |= self.read_from_rom(&(address - ROM_LOW_ADDRESS)) & 0xff00;
+            }
             self.write_to_rom(&(address - ROM_LOW_ADDRESS), data);
         } else if (RAM_LOW_ADDRESS..=RAM_HIGH_ADDRESS - 1).contains(address) {
+            if half {
+                data |= self.read_from_ram(&(address - RAM_LOW_ADDRESS)) & 0xff00;
+            }
             self.write_to_ram(&(address - RAM_LOW_ADDRESS), data);
         } else {
             Err(MemoryError::InvalidAddress(*address))?
