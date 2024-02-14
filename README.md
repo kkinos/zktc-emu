@@ -1,31 +1,35 @@
 # zktc-emu
 
-zktc-emu は Rust で実装された ZKTC エミュレータです。
+zktc-emu is a [ZKTC](https://github.com/kinpoko/zktc) emulator implemented in Rust.
 
-# インストール
+# Install
 
 ```bash
 cargo install --git https://github.com/kinpoko/zktc-emu.git
 ```
 
-# 使い方
+# Usage
 
-[zktc-asm](https://github.com/kinpoko/zktc-asm)を使って mem ファイルを作成してください。
+Create a `mem` file using [zktc-asm](https://github.com/kinpoko/zktc-asm).
 
 ```bash
 zktc-asm rom_file.asm -o rom_file.mem
 ```
 
-mem ファイルを ROM にロードして実行します。`--ram`オプションで RAM にロードする mem ファイルを指定することもできます。
+Loads a `mem` file into ROM and executes.
 
 ```bash
 zktc-emu rom_file.mem
 zktc-emu >>
 ```
 
-# コマンド
+You can also specify which a `mem` file to load into RAM with the `--ram` option.
 
-実行中は以下のコマンドが使用できます。
+```bash
+zktc-emu rom_file.mem --ram ram_file.mem
+```
+
+# Commands
 
 ```bash
 zktc-emu >> help
@@ -45,9 +49,9 @@ exit          : exit
 zktc-emu >>
 ```
 
-# テスト
+# Tests
 
-[zktc-asm](https://github.com/kinpoko/zktc-asm)をインストールした状態で以下のコマンドでテストを行うことができます。
+With [zktc-asm](https://github.com/kinpoko/zktc-asm) installed, the following commands can be used for testing.
 
 ```bash
 make test
