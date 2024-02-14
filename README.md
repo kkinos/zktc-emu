@@ -51,8 +51,10 @@ zktc-emu >>
 
 # Tests
 
-With [zktc-asm](https://github.com/kinpoko/zktc-asm) installed, the following commands can be used for testing.
-
 ```bash
 make test
 ```
+
+requirements
+
+- [zktc-asm](https://github.com/kinpoko/zktc-asm)
