@@ -7,7 +7,7 @@ use zktc::Error;
 use zktc::Zktc;
 
 #[derive(Parser)]
-#[clap(version = "0.1", author = "kinpoko", about = "ZKTC emulator")]
+#[clap(version = "0.1", author = "kkinos", about = "ZKTC emulator")]
 struct Args {
     /// rom file path
     rom_file_path: String,

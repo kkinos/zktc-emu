@@ -18,6 +18,6 @@ jobs:
       - name: Build
         run: cargo build --verbose
       - name: Test setup
-        run: cargo install --git https://github.com/kinpoko/zktc-asm.git
+        run: cargo install --git https://github.com/kkinos/zktc-asm.git
       - name: Run tests
         run: make test

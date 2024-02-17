@@ -1,16 +1,16 @@
 # zktc-emu
 
-zktc-emu is a [ZKTC](https://github.com/kinpoko/zktc) emulator implemented in Rust.
+zktc-emu is a [ZKTC](https://github.com/kkinos/zktc) emulator implemented in Rust.
 
 # Install
 
 ```bash
-cargo install --git https://github.com/kinpoko/zktc-emu.git
+cargo install --git https://github.com/kkinos/zktc-emu.git
 ```
 
 # Usage
 
-Create a `mem` file using [zktc-asm](https://github.com/kinpoko/zktc-asm).
+Create a `mem` file using [zktc-asm](https://github.com/kkinos/zktc-asm).
 
 ```bash
 zktc-asm rom_file.asm -o rom_file.mem
@@ -57,4 +57,4 @@ make test
 
 requirements
 
-- [zktc-asm](https://github.com/kinpoko/zktc-asm)
+- [zktc-asm](https://github.com/kkinos/zktc-asm)
