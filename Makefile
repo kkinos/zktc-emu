@@ -6,7 +6,7 @@ test: $(TARGET)
 	cargo test
 
 test/mem/%.mem: test/asm/%.asm
-	zktc-asm $< -o $@ -b 0x8000
+	zktc-asm $< -o $@ -b 0xb000
 
 .PHONY: clean
 clean:
