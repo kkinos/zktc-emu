@@ -37,12 +37,12 @@ jalr x0, x5, 0
 expect:
 	.word 0x0002
 
-pass: // if test passed M[0xffff] = 1
+pass: // if test passed M[0xfffe] = 1
 	addi x2, x0, 1
 	sw x2, x7,0
 	jalr x0, x6, 0
 
-fail: // if test failed M[0xffff] = 2
+fail: // if test failed M[0xfffe] = 2
 	addi x2, x0, 2
 	sw x2, x7,0
 	jalr x0, x6, 0
