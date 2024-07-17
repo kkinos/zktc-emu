@@ -19,7 +19,7 @@ impl Cpu {
             pc: ROM_LOW_ADDRESS,
             gr: [0; 8],
             sp: 0,
-            psr: 0,
+            psr: 0x8000,
             tr: 0,
             tlr: 0,
             thr: 0,
