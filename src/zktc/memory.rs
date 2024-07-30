@@ -8,7 +8,7 @@ pub const ROM_HIGH_ADDRESS: u16 = 0xFFFF;
 pub const ROM_LOW_ADDRESS: u16 = 0xB000;
 pub const ROM_SIZE: u16 = (ROM_HIGH_ADDRESS - ROM_LOW_ADDRESS) + 1;
 
-pub const RAM_HIGH_ADDRESS: u16 = 0x5000;
+pub const RAM_HIGH_ADDRESS: u16 = 0x8000;
 pub const RAM_LOW_ADDRESS: u16 = 0x0;
 pub const RAM_SIZE: u16 = (RAM_HIGH_ADDRESS - RAM_LOW_ADDRESS) + 1;
 
