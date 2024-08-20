@@ -230,7 +230,7 @@ impl Cpu {
     pub fn trap(&mut self) {
         self.ppc = self.pc;
         self.ppsr = self.psr;
-        self.psr = 0x2;
+        self.psr = 0x5;
         self.pc = 0;
     }
 }
